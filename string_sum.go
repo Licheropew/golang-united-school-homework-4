@@ -26,9 +26,9 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	var plusIndex, minusIndex, result int
+	var plusIndex, minusIndex, result, plus, minus int
+
 	input = strings.ReplaceAll(input, " ", "")
-	var plus, minus int
 
 	if len(input) == 0 {
 		return "", fmt.Errorf("%w", errorEmptyInput)
@@ -39,7 +39,7 @@ func StringSum(input string) (output string, err error) {
 	minus = strings.Count(input, "-")
 	minusIndex = strings.Index(input, "-")
 
-	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 || (plus+minus) == 1 && minusIndex == 0 {
+	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 || (plus+minus) == 1 && (minusIndex == 0 || plusIndex == 0) {
 		return "", fmt.Errorf("%w", errorNotTwoOperands)
 	}
 
