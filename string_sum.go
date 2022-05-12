@@ -2,6 +2,9 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -23,5 +26,47 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	var plusIndex, minusIndex, result int
+	input = strings.ReplaceAll(input, " ", "")
+	var plus, minus int
+
+	if len(input) == 0 {
+		return "", fmt.Errorf("%w", errorEmptyInput)
+	}
+
+	plus = strings.Count(input, "+")
+	plusIndex = strings.Index(input, "+")
+	minus = strings.Count(input, "-")
+	minusIndex = strings.Index(input, "-")
+
+	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 || (plus+minus) == 1 && minusIndex == 0 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	}
+
+	if plus == 1 {
+		first, err1 := strconv.Atoi(input[:plusIndex])
+		if err1 != nil {
+			return "", fmt.Errorf("%w", err1)
+		}
+		second, err2 := strconv.Atoi(input[plusIndex+1:])
+		if err2 != nil {
+			return "", fmt.Errorf("%w", err2)
+		}
+		result = first + second
+	} else {
+		if minusIndex == 0 {
+			minusIndex = strings.LastIndex(input, "-")
+		}
+		first, err1 := strconv.Atoi(input[:minusIndex])
+		if err1 != nil {
+			return "", fmt.Errorf("%w", err1)
+		}
+		second, err2 := strconv.Atoi(input[minusIndex+1:])
+		if err2 != nil {
+			return "", fmt.Errorf("%w", err2)
+		}
+		result = first - second
+	}
+
+	return strconv.Itoa(result), nil
 }
