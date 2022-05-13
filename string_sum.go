@@ -31,7 +31,7 @@ func StringSum(input string) (output string, err error) {
 	input = strings.ReplaceAll(input, " ", "")
 
 	if len(input) == 0 {
-		return "", fmt.Errorf("%w", errorEmptyInput)
+		return "", fmt.Errorf("input error: %w", errorEmptyInput)
 	}
 
 	plus = strings.Count(input, "+")
@@ -39,31 +39,37 @@ func StringSum(input string) (output string, err error) {
 	minus = strings.Count(input, "-")
 	minusIndex = strings.Index(input, "-")
 
-	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 || (plus+minus) == 1 && (minusIndex == 0 || plusIndex == 0) {
-		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 {
+		return "", fmt.Errorf("expression error: %w", errorNotTwoOperands)
 	}
 
 	if plus == 1 {
+		if len(input[:plusIndex]) == 0 || len(input[plusIndex+1:]) == 0 {
+			return "", fmt.Errorf("expression error: %w", errorNotTwoOperands)
+		}
 		first, err1 := strconv.Atoi(input[:plusIndex])
 		if err1 != nil {
-			return "", fmt.Errorf("%w", err1)
+			return "", fmt.Errorf("first operand error: %w", err1)
 		}
 		second, err2 := strconv.Atoi(input[plusIndex+1:])
 		if err2 != nil {
-			return "", fmt.Errorf("%w", err2)
+			return "", fmt.Errorf("second operand error: %w", err2)
 		}
 		result = first + second
 	} else {
 		if minusIndex == 0 {
 			minusIndex = strings.LastIndex(input, "-")
 		}
+		if len(input[:minusIndex]) == 0 || len(input[minusIndex+1:]) == 0 {
+			return "", fmt.Errorf("expression error: %w", errorNotTwoOperands)
+		}
 		first, err1 := strconv.Atoi(input[:minusIndex])
 		if err1 != nil {
-			return "", fmt.Errorf("%w", err1)
+			return "", fmt.Errorf("first operand error: %w", err1)
 		}
 		second, err2 := strconv.Atoi(input[minusIndex+1:])
 		if err2 != nil {
-			return "", fmt.Errorf("%w", err2)
+			return "", fmt.Errorf("second operand error: %w", err2)
 		}
 		result = first - second
 	}
