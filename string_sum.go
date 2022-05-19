@@ -39,7 +39,7 @@ func StringSum(input string) (output string, err error) {
 	minus = strings.Count(input, "-")
 	minusIndex = strings.Index(input, "-")
 
-	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 {
+	if plus > 1 || minus > 2 || (plus+minus) > 2 || (plus+minus) == 0 || (plus+minus) > 1 && minusIndex != 0 {
 		return "", fmt.Errorf("expression error: %w", errorNotTwoOperands)
 	}
 
